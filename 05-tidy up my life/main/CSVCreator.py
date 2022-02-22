@@ -38,10 +38,6 @@ def  CSVsNDays(N): #creates month directory, in each week directories and in eac
         f.close()
         x = x +1
 
-         #   f = open('G:\My Drive\jahad\purposes\\find_job\data science projects\\05-tidy up my life\CSVs\{year}\{month}\{week}\{day}.xlsx'.format(year = d.year, month = d.month-1, week = d.isocalendar().week, day = d.day),'w')
-          #  f.write(d.isoformat() + ',')
-           # f.write(hours)
-            #f.close()
 CSVsNDays(100)
 
 
