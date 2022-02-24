@@ -1,12 +1,27 @@
-from datetime import datetime
-#scafolding :
-d = datetime.now()
+import datetime
 
 class Action :
-    #Action class with date and time both in datetime object 
-    def  __init__(self, dateTime) :
-        self.datetime = dateTime
+    def  __init__(self, event) :
+        self.event = event
+        self.type = event['summary'].capitalize()
+        self.datetime = datetime.datetime.fromisoformat(event['start']['dateTime'])
+        self.duration = datetime.datetime.fromisoformat(event['end']['dateTime'])-datetime.datetime.fromisoformat(event['start']['dateTime'])
+        
+        if('description' in self.event) :
+            self.description = event['description']
+        else : 
+            self.description = None
 
+    def  __str__(self) :
+        return self.type
+
+    def  startDateStr(self) :
+        '''returns start date in str format'''
+        return self.datetime.isoformat()
+
+    def discribe(self) :
+        return None
+            
 class Work(Action) :
     pass
 
@@ -17,21 +32,20 @@ class Code(Work) :
     pass
 
 class Sleep(Action) :
-    def  __init__(self, dateTime) :
-        self.datetime = dateTime
 
+    def discribe(self) :
         if (self.datetime.hour >=0 and self.datetime.hour<=12) :#see if the sleep is night sleep or noon sleep
             self.noon = 0
         else : 
             self.noon = 1
+
     def  isNoonSleep(self):
         #if zero, it is nightsleep if 1 it is noon sleep
         return self.noon
         
 
 class Pray(Action) :
-    def  __init__(self, dateTime) :
-        self.datetime = dateTime
+    def discribe(self) :
         self.prayNames = ['morning','noon','evening','night']
 
         if (self.datetime.hour >=4 and self.datetime.hour<=8) :#calculate pray number, 0 is morning and 3 is the night pray
@@ -42,15 +56,14 @@ class Pray(Action) :
             self.prayNum = 2
         else :
             self.prayNum = 3
+
     def  whichPray(self) :
         #returns the name of the pray
         return self.prayNames[self.prayNum]
 
 class Eat(Action) :
-    def  __init__(self, dateTime) :
-        self.datetime = dateTime
+    def discribe(self) :
         self.mealNames = ['breakfast','lunch','dinner']
-
         if (self.datetime.hour >=4 and self.datetime.hour<=11) :#calculate pray number, 0 is morning and 3 is the night pray
             self.mealNum = 0
         elif (self.datetime.hour > 11 and self.datetime.hour<=18): 
@@ -64,17 +77,33 @@ class SocialMedia(Action) :
     pass
 
 class Socialize(Action) :
-    def setPeople(self, peopleNameList) :
-        self.people = peopleNameList
+        
+    def setPeople(self) :
+        try :
+            self.people = self.description.split(',')[1:]
+        except :
+            if(self.description == None) :
+                print('no description found  in event {cls}, in date {date}'.format(date = self.startDateStr(),cls = self.type))
+            else :  
+                print('wrong format in event {cls}, in date {date}'.format(cls = self.type, date = self.startDateStr()))
     def  getPeople(self) :
         return self.people
+    def  discribe(self) :
+        self.setPeople()
 
 class Educate(Action) :
-    def  setSubject(self, subject) :
-        self.subject = subject
+    def  setSubject(self) :
+        try :
+            self.subject = self.description
+        except :
+            if(self.description == None) :
+                print('no description found  in event {cls}, in date {date}'.format(date = self.startDateStr(),cls = self.type))
+            else :  
+                print('wrong format in event {cls}, in date {date}'.format(cls = self.type, date = self.startDateStr()))
     def  getSubject(self) :
         return self.subject
-    pass
+    def  discribe(self) :
+        self.setSubject()
 class Book(Educate) :
     def  setBookName(self,bookName):
         self.bookName = bookName
@@ -97,26 +126,3 @@ class Web(Educate) :
 
 
 
-#scafolding
-w = Sleep(d)
-print(w.isNoonSleep())
-
-p = Pray(d)
-print(p.whichPray())
-
-e = Eat(d)
-print(e.whichMeal())
-
-s = Socialize(d)
-s.setPeople(['abas','hossein'])
-print(s.getPeople())
-
-b = Book(d)
-b.setBookName('harryPotter')
-print(b.getBookName())
-
-pc = Podcast(d)
-pc.setPodcastName('defaAqlani')
-print(pc.getPodcastName())
-pc.setSubject('din')
-print(pc.getSubject())
