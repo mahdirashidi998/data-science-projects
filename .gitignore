@@ -366,3 +366,6 @@ FodyWeavers.xsd
 /05-tidy up my life/scraches/flowchart.gsheet
 /05-tidy up my life/scraches/flowchart.gsheet
 /05-tidy up my life/scraches/flowchart.gsheet
+/05-tidy up my life/googleCalendarApi/token.json
+*.py
+*.json
